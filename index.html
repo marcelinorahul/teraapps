@@ -76,13 +76,20 @@ details{margin-bottom:1rem;border:1px solid var(--line);border-radius:var(--r)}s
 .v4{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-top:.5rem}.v4 dd{font:500 1.2rem var(--mono)}.v4 small{display:block;color:var(--ink-2);font:400 .7rem var(--mono)}
 .group{padding:.65rem .8rem;border:1px solid var(--line);border-radius:var(--r);background:var(--bg);font-size:.875rem}
 .group h4{display:flex;justify-content:space-between;gap:.5rem;font-size:.9rem}.group p{margin-top:.2rem;color:var(--ink-2);font:500 .8rem var(--mono);overflow-wrap:anywhere}
-.review-table-wrap{overflow-x:auto;margin-top:.85rem}
-.review-table{width:100%;border-collapse:collapse;font-size:.8125rem;text-align:left}
-.review-table th,.review-table td{padding:.55rem .65rem;border-bottom:1px solid var(--line);vertical-align:top}
-.review-table th{color:var(--ink-2);font-weight:500;white-space:nowrap}
-.review-table td:nth-child(3),.review-table td:nth-child(4),.review-table td:nth-child(5){font-family:var(--mono);white-space:nowrap}
-.review-table tr[data-k=warn] td:last-child{color:var(--warn)}
-.review-table tr[data-k=ok] td:last-child{color:var(--ok)}
+.review-panel{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
+.review-panel .ch{margin-bottom:.4rem}
+.review-summary{color:var(--ink-2);font-size:.9rem}
+.review-details{margin-top:.75rem}
+.review-stations{display:grid;gap:.55rem;margin-top:.65rem}
+.review-station{padding:.7rem;border:1px solid var(--line);border-radius:var(--r);background:var(--bg)}
+.review-station h4{margin-bottom:.45rem;font-size:.9rem}
+.review-values{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
+.review-values dt{font-size:.7rem}
+.review-values dd{font:500 .9rem var(--mono);overflow-wrap:anywhere}
+.review-values small{display:block;margin-top:.1rem;color:var(--ink-2);font-size:.7rem;line-height:1.35}
+.review-values [data-k=warn] small{color:var(--warn)}
+.review-values [data-k=ok] small{color:var(--ok)}
+.review-actions{margin-top:.75rem}
 pre.out{margin:0;padding:.9rem;border-radius:var(--r);background:var(--sunken);font:500 .8125rem/1.6 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}
 .toast{position:fixed;inset:auto 1rem calc(5.5rem + env(safe-area-inset-bottom,0));z-index:40;max-width:28rem;margin-inline:auto;padding:.7rem 1rem;border-radius:var(--r);background:var(--ink);color:var(--bg);font-size:.9rem;text-align:center}
 .blank-panel{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
@@ -131,19 +138,19 @@ body{padding-bottom:2.5rem}
 <p class="hint">File dibaca di perangkat ini dan tidak dikirim ke server. Setelah diunduh, hasilnya bisa dipakai untuk laporan berikutnya selama halaman terbuka.</p>
 <label class="drop" id="drop"><input class="sr" type="file" id="tf" accept=".xlsx"><strong id="tn">Pilih atau seret file .xlsx ke sini</strong><span>Template tidak disimpan; pilih ulang setiap sesi</span></label>
 <div class="field" style="margin-top:.85rem"><label for="ow">Jika sel input sudah berisi angka</label><select id="ow"><option value="0">Lewati (paling aman)</option><option value="1">Timpa dengan angka baru</option></select></div></section></div>
-<section class="card"><div class="ch"><span class="step" aria-hidden="true">3</span><h3>Isi &amp; review Excel</h3><span class="chip" id="c-res">–</span></div>
+<section class="card"><div class="ch"><span class="step" aria-hidden="true">3</span><h3>Siapkan Excel</h3><span class="chip" id="c-res">–</span></div>
 <details><summary>Batas peringatan (opsional)</summary><div class="fg">
 <div class="field"><label for="l-moist">Batas Moist</label><input id="l-moist" inputmode="decimal"></div>
 <div class="field"><label for="l-owm">Batas OWM</label><input id="l-owm" inputmode="decimal"></div>
 <div class="field"><label for="l-odm">Batas ODM</label><input id="l-odm" inputmode="decimal"></div></div></details>
 <ul class="stations" id="stations"><li class="empty">Belum ada data. Tempel laporan di langkah 1.</li></ul>
-<div class="acts"><button class="btn p" type="button" id="b-review">Isi &amp; review</button></div>
+<div class="acts"><button class="btn p" type="button" id="b-review">Siapkan Excel</button></div>
 <p class="note" id="fnote" role="status" hidden></p>
-<section class="card" id="review-panel" style="margin-top:1rem" hidden>
-<div class="ch"><span class="step" aria-hidden="true">4</span><h3>Download hasil</h3><span class="chip" id="c-review">Belum direview</span></div>
-<p class="hint" id="review-summary"></p>
-<div class="review-table-wrap"><table class="review-table"><thead><tr><th>Titik</th><th>Parameter</th><th>Sel</th><th>Sebelumnya</th><th>Nilai laporan</th><th>Status</th></tr></thead><tbody id="review-rows"></tbody></table></div>
-<div class="acts"><button class="btn p" type="button" id="b-download">Download Excel</button></div>
+<section class="review-panel" id="review-panel" hidden>
+<div class="ch"><h3>Excel siap diunduh</h3><span class="chip" id="c-review">Belum disiapkan</span></div>
+<p class="review-summary" id="review-summary"></p>
+<details class="review-details"><summary>Lihat nilai per titik (opsional)</summary><ul class="review-stations" id="review-rows"></ul></details>
+<div class="acts review-actions"><button class="btn p" type="button" id="b-download">Unduh Excel</button></div>
 </section></section></div></section>
 
 <!-- Fitur perhitungan rata-rata dari laporan sampling kernel. -->
@@ -326,10 +333,10 @@ async function exportTpl(zip,path,xml){zip.file(path,xml,{createFolders:false});
 // Menyimpan laporan, template Excel, serta rencana pengisian yang aktif.
 const V={report:null,buffer:null,fileName:"",plan:null,pending:null,revision:0,reviewing:false,limits:store.get("limits",{moist:null,owm:null,odm:null})};
 const isOver=(k,v)=>Number.isFinite(V.limits[k])&&Number.isFinite(v)&&v>V.limits[k],pLabel=k=>PARAMS.find(p=>p.key===k).label,shiftT=n=>["","I","II","III"][n]??"";
-function clearReview(){V.revision++;V.pending=null;V.plan=null;$("#review-panel").hidden=true;$("#review-rows").innerHTML="";$("#b-download").hidden=true;setChip($("#c-review"),"Belum direview");setNote($("#fnote"),"")}
+function clearReview(){V.revision++;V.pending=null;V.plan=null;$("#review-panel").hidden=true;$("#review-rows").innerHTML="";$(".review-details").open=false;$("#b-download").hidden=true;setChip($("#c-review"),"Belum disiapkan");setNote($("#fnote"),"")}
 // Membaca teks laporan lalu memperbarui deteksi dan pratinjau Excel.
 function readReport(){const r=parseOil($("#rt").value);r.sheet=r.date?r.date.slice(8):"";r.baseRow=BASE[r.shiftNo]??0;V.report=r;renderReport()}
-function stStatus(id){if(!V.plan)return{kind:"",text:"Belum direview"};const mine=V.plan.filter(p=>p.stationId===id),go=mine.filter(p=>!p.skip),sk=mine.filter(p=>p.skip),verb=go.some(p=>p.written)?(V.pending?"Siap diunduh":"Sudah diunduh"):"Siap",addrs=go.map(p=>p.addr).join(", "),why=sk.map(p=>`${pLabel(p.param)} (${p.state})`).join(", ");
+function stStatus(id){if(!V.plan)return{kind:"",text:"Belum disiapkan"};const mine=V.plan.filter(p=>p.stationId===id),go=mine.filter(p=>!p.skip),sk=mine.filter(p=>p.skip),verb=go.some(p=>p.written)?(V.pending?"Siap diunduh":"Sudah diunduh"):"Siap",addrs=go.map(p=>p.addr).join(", "),why=sk.map(p=>`${pLabel(p.param)} (${p.state})`).join(", ");
 if(!go.length)return{kind:"bad",text:`Dilewati: ${why}`};if(sk.length)return{kind:"warn",text:`${verb} ${addrs} · dilewati: ${why}`};return{kind:"ok",text:`${verb} ${addrs}${go.some(p=>p.state==="terisi")?" (menimpa)":""}`}}
 function stCard(row){const s=stStatus(row.station.id),vals=PARAMS.map(p=>{const v=row[p.key];return`<div><dt>${p.label}</dt><dd data-o="${isOver(p.key,v)}">${Number.isFinite(v)?v+(isOver(p.key,v)?" ⚠":""):"–"}</dd></div>`}).join("");
 return`<li class="st" data-k="${s.kind}"><div class="sh"><h4>${esc(row.station.label)}</h4><span class="cb">Kolom ${row.station.col}</span></div><dl class="vals">${vals}</dl><p class="status">${esc(s.text)}</p></li>`}
@@ -340,30 +347,38 @@ setChip($("#c-paste"),r.stations.length?`${r.stations.length} titik · ${n} nila
 const list=$("#stations");if(!r.stations.length&&!r.unknown.length){list.innerHTML='<li class="empty">Belum ada data. Tempel laporan di langkah 1.</li>';setChip($("#c-res"),"–");return}
 list.innerHTML=r.stations.map(stCard).join("")+r.unknown.map(l=>`<li class="st" data-k="bad"><div class="sh"><h4>${esc(l)}</h4></div><p class="status">Titik tidak dikenal, tidak diisi</p></li>`).join("");
 setChip($("#c-res"),`${r.stations.length} titik dikenali${r.unknown.length?` · ${r.unknown.length} tidak dikenal`:""}`,r.unknown.length?"warn":"ok")}
-// Menampilkan alamat dan nilai sel sebelum file boleh diunduh.
+// Merangkum perubahan per titik; rincian sel tersedia bila diperlukan.
 function renderReview(head,ready,skipped) {
-    const status = item => {
-        if (!item.skip) return item.state === "terisi" ? "Akan ditimpa" : "Akan diisi";
-        if (item.state === "rumus") return "Dilewati · rumus";
-        if (item.state === "gabungan") return "Dilewati · sel gabungan";
-        return "Dilewati · sel sudah terisi";
-    };
+    const groups = new Map();
+    for (const item of V.plan) {
+        const group = groups.get(item.stationId) || {};
+        group[item.param] = item;
+        groups.set(item.stationId, group);
+    }
 
     $("#review-summary").textContent =
-        `${head} · ${ready} sel akan diisi${skipped ? ` · ${skipped} dilewati` : ""}. Periksa nilai dan alamat sel sebelum mengunduh.`;
-    $("#review-rows").innerHTML = V.plan.map(item => {
-        const station = S.find(entry => entry.id === item.stationId);
-        const result = status(item);
-        return `<tr data-k="${item.skip ? "warn" : "ok"}">
-            <td>${esc(station.label)}</td>
-            <td>${esc(pLabel(item.param))}</td>
-            <td>${esc(item.addr)}</td>
-            <td>${item.previous === null ? "Kosong" : esc(item.previous)}</td>
-            <td>${esc(item.value)}</td>
-            <td>${esc(result)}</td>
-        </tr>`;
+        `${head} · ${ready} nilai akan ditulis${skipped ? ` · ${skipped} tidak diubah` : ""}. Unduhan adalah salinan baru; file asli tetap aman.`;
+    $("#review-rows").innerHTML = [...groups].map(([stationId, values]) => {
+        const station = S.find(entry => entry.id === stationId);
+        const metrics = PARAMS.map(param => {
+            const item = values[param.key];
+            if (!item) return `<div><dt>${param.label}</dt><dd>–</dd><small>Tidak ada di laporan</small></div>`;
+            const detail = item.skip
+                ? item.state === "rumus" ? `Tidak diubah · rumus · ${item.addr}`
+                    : item.state === "gabungan" ? `Tidak diubah · sel gabungan · ${item.addr}`
+                        : `Tidak diubah · sel sudah berisi · ${item.addr}`
+                : item.state === "terisi" ? `Akan diganti · ${item.addr}`
+                    : `Akan diisi · ${item.addr}`;
+            const value = item.skip
+                ? `Excel ${item.previous === null ? "—" : esc(item.previous)} · laporan ${esc(item.value)}`
+                : item.state === "terisi" && item.previous !== null
+                    ? `${esc(item.previous)} → ${esc(item.value)}`
+                    : esc(item.value);
+            return `<div data-k="${item.skip ? "warn" : "ok"}"><dt>${param.label}</dt><dd>${value}</dd><small>${esc(detail)}</small></div>`;
+        }).join("");
+        return `<li class="review-station"><h4>${esc(station.label)}</h4><dl class="review-values">${metrics}</dl></li>`;
     }).join("");
-    setChip($("#c-review"), `${ready} sel siap${skipped ? ` · ${skipped} dilewati` : ""}`, skipped ? "warn" : "ok");
+    setChip($("#c-review"), "Siap diunduh", skipped ? "warn" : "ok");
     $("#b-download").hidden = false;
     $("#review-panel").hidden = false;
 }
@@ -415,7 +430,7 @@ async function reviewFill() {
         V.plan = planFill(report, xml, { overwrite: $("#ow").value === "1" });
         const ready = V.plan.filter(item => !item.skip).length;
         const skipped = V.plan.length - ready;
-        const head = `Sheet “${report.sheet}” · Shift ${shiftT(report.shiftNo)} · baris ${report.baseRow}–${report.baseRow + 2}`;
+        const head = `Tanggal ${dayText(report.date)} · Shift ${shiftT(report.shiftNo)}`;
 
         renderReport();
         if (!ready) return fail("Tidak ada sel yang bisa diisi. Lihat status tiap titik.");
@@ -441,7 +456,7 @@ async function reviewFill() {
         V.pending = { bytes, name };
         renderReport();
         renderReview(head, ready, skipped);
-        setNote(note, "Review selesai. File belum diunduh; pastikan nilai dan sel tujuan sudah benar.", "ok");
+        setNote(note, "File siap diunduh. Buka rincian per titik jika ingin mengecek nilai dan sel.", "ok");
         V.reviewing = false;
         $("#b-review").disabled = false;
         return true;
